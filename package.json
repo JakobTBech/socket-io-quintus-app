@@ -1,0 +1,13 @@
+{
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JakobTBech/socket-io-quintus-app.git"
+  },
+  "name": "socket-io-quintus-app",
+  "author": "Jakob Bech",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "^4.13.4",
+    "socket.io": "^1.4.4"
+  }
+}
