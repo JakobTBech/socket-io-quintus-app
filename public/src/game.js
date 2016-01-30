@@ -1,6 +1,6 @@
 var Q = Quintus({ audioSupported: ['wav', 'mp3'] })
       .include('Sprites, Scenes, Input, 2D, Anim, Touch, UI, Audio')
-      .setup({ maximize: true})
+      .setup({ maximize: false})
       .enableSound()
       .controls().touch();
 
