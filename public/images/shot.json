@@ -1,0 +1,10 @@
+{
+  "shot": {
+    "sx":0,
+    "sy":0,
+    "cols":1,
+    "tilew":4,
+    "tileh":7,
+    "frames":1
+  }
+}
