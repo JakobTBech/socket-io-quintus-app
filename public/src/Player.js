@@ -1,19 +1,56 @@
 require([], function () {
+
+  Q.component('cannon', {
+    added: function() {
+      this.entity.p.shots = [];
+      this.entity.on('step', 'handleFiring');
+    },
+    extend: {
+
+      fire: function () {
+        if (Q.inputs['fire']) {
+          var entity = this;
+          var shot = Q.stage().insert(new Q.Shot({
+            x: entity.p.x,
+            y: entity.p.y,
+            speed: 200,
+            type: Q.SPRITE_DEFAULT || Q.SPRITE_FRIENDLY
+          }));
+          entity.p.shots.push(shot);
+        }
+      },
+
+      handleFiring: function(dt) {
+        var entity = this;
+        var i;
+        // 
+        // for (i = entity.p.shots.length - 1; 1 >= 0; i--) {
+        //
+        // }
+
+        if (Q.inputs['fire']) {
+          this.fire();
+        }
+      }
+
+    }
+  });
+
   Q.Sprite.extend('Player', {
     init: function (p) {
       p.rotation_speed = 150;
       p.thrust = 3;
-      p.slowdown = 0.8;
+      p.slowdown = 0.9;
       p.thrustX = 0;
       p.thrustY = 0;
       p.speed = 0;
-      p.max_speed = 200;
-      p.min_speed = -100;
+      p.max_speed = 100;
+      p.min_speed = -75;
       this._super(p, {
         sheet: 'player'
       });
 
-      this.add('2d, animation');
+      this.add('2d, animation, cannon');
     },
     step: function (dt) {
       if (Q.inputs["right"]) {
@@ -41,16 +78,13 @@ require([], function () {
       this.p.vx = this.p.thrustX * this.p.speed;
       this.p.vy = this.p.thrustY * this.p.speed;
 
-      console.log('angle:', this.p.angle);
-      console.log('vx:', this.p.vx);
-      console.log('vy:', this.p.vy);
-      console.log('speed:', this.p.speed);
-      console.log('thrustY:', this.p.thrustY);
-      console.log('thrustX:', this.p.thrustX);
-
-      console.log('\n');
-
-      this.p.socket.emit('update', { playerId: this.p.playerId, x: this.p.x, y: this.p.y, sheet: this.p.sheet });
+      this.p.socket.emit('update', {
+        playerId: this.p.playerId,
+        x: this.p.x,
+        y: this.p.y,
+        angle: this.p.angle,
+        sheet: this.p.sheet
+      });
     }
   });
 });

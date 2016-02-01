@@ -7,6 +7,8 @@ var Q = Quintus({ audioSupported: ['wav', 'mp3'] })
 Q.gravityY = 0;
 
 var objectFiles= [
+  './src/cannon',
+  './src/shot',
   './src/player'
 ];
 
@@ -22,18 +24,26 @@ require(objectFiles, function () {
 
     socket.on('connected', function (data) {
       selfId = data.id;
-      player = new Q.Player({ playerId: selfId, x: 100, y: 100, socket: socket });
+      player = new Q.Player({
+        playerId: selfId,
+        x: 100,
+        y: 100,
+        socket: socket
+      });
       stage.insert(player);
       stage.add('viewport').follow(player);
     });
 
     socket.on('updated', function (data) {
+
       var actor = players.filter(function (obj) {
         return obj.playerId == data['playerId'];
       })[0];
+
       if (actor) {
         actor.player.p.x = data['x'];
         actor.player.p.y = data['y'];
+        actor.player.p.angle = data['angle'];
         actor.player.p.sheet = data['sheet'];
         actor.player.p.update = true;
       } else {
@@ -41,6 +51,7 @@ require(objectFiles, function () {
         players.push({ player: temp, playerId: data['playerId'] });
         stage.insert(temp);
       }
+
     });
   }
 
@@ -53,13 +64,16 @@ require(objectFiles, function () {
   var files = [
     '/images/tiles.png',
     '/maps/arena.json',
-    '/images/sprites.png',
-    '/images/sprites.json'
+    '/images/shot.png',
+    '/images/shot.json',
+    '/images/tank.png',
+    '/images/tank.json'
   ];
 
   Q.load(files.join(','), function () {
     Q.sheet('tiles', '/images/tiles.png', { tilew: 32, tileh: 32 });
-    Q.compileSheets('/images/sprites.png', '/images/sprites.json');
+    Q.compileSheets('/images/shot.png', '/images/shot.json');
+    Q.compileSheets('/images/tank.png', '/images/tank.json');
     Q.stageScene('arena', 0);
   });
 });
