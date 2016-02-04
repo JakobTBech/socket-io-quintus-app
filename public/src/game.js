@@ -1,8 +1,18 @@
 var Q = Quintus({ audioSupported: ['wav', 'mp3'] })
-      .include('Sprites, Scenes, Input, 2D, Anim, Touch, UI, Audio')
-      .setup({ maximize: false})
-      .enableSound()
-      .controls().touch();
+      .include('Sprites, Scenes, Input, 2D, Anim, Touch, TMX, UI, Audio')
+      .setup({ 
+          //maximize: true,
+          upsampleWidth:  1920,
+          upsampleHeight: 1280,
+          width:   1140, 
+          height:  560, 
+          scaleToFit: true 
+          })
+        // And turn on default input controls and touch input (for UI)
+        .controls(true).touch()
+        // Enable sounds.
+        .enableSound()
+
 
 Q.gravityY = 0;
 
@@ -12,6 +22,7 @@ var objectFiles= [
   './src/player'
 ];
 
+var boundingBox = {minX:16, minY:0, maxX:99*64, maxY: 54*14};
 var players = [];
 var socket = io.connect('http://localhost:3000');
 var UiPlayers = document.getElementById('players');
@@ -55,25 +66,37 @@ require(objectFiles, function () {
     });
   }
 
+Q.scene("arena",function(stage) {
+  Q.stageTMX("404-level.tmx",stage);
+
+  stage.add("viewport").follow(player, {x: true, y:true}, boundingBox);
+  stage.viewport.scale = 0.8;
+
+});
+/*
   Q.scene('arena', function(stage) {
     stage.collisionLayer(new Q.TileLayer({ dataAsset: '/maps/arena.json', sheet: 'tiles' }));
 
     setUp(stage);
   });
 
+*/
   var files = [
-    '/images/tiles.png',
-    '/maps/arena.json',
     '/images/shot.png',
     '/images/shot.json',
     '/images/tank.png',
-    '/images/tank.json'
+    '/images/tank.json',
+    '/images/404-tiles.png',
+    '/images/bg_castle.png',
+    '/maps/tank-level.tmx'
   ];
 
-  Q.load(files.join(','), function () {
-    Q.sheet('tiles', '/images/tiles.png', { tilew: 32, tileh: 32 });
+
+
+ // Q.load(files.join(','), function () {
+  Q.loadTMX(files.join(','), function () {
     Q.compileSheets('/images/shot.png', '/images/shot.json');
     Q.compileSheets('/images/tank.png', '/images/tank.json');
-    Q.stageScene('arena', 0);
+    Q.stageScene('arena');
   });
 });

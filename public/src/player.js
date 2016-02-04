@@ -47,7 +47,10 @@ require([], function () {
       p.max_speed = 100;
       p.min_speed = -75;
       this._super(p, {
-        sheet: 'player'
+        sheet: 'player',
+        sprite: 'player',
+        type: Q.SPRITE_PLAYER,
+        collisionMask: Q.SPRITE_DEFAULT
       });
 
       this.add('2d, animation, cannon');
